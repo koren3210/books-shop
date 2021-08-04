@@ -17,20 +17,35 @@
 <body onload="onInit()">
   <span class="header">
     <img src="img/b.png">
-    <h1> Books Shop </h1>
-
+    <h1 data-trans="title"> Books Shop </h1>
   </span>
 
 
-  <!-- <div class="language container">
-    <span data-trans="lang">Language</span>:
+  <!-- <span data-trans="lang">Language</span>:
     <select name="lang-select">
       <option value="eng">English</option>
       <option value="heb">עברית</option>
-    </select>
-  </div> -->
+    </select> -->
 
-  <div class="sort-btns">
+
+  <div class="navBtns">
+    <div class="dropdown m-5">
+      <button data-trans="Language" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        Language
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li data-lang="en" onclick="onSetLang(this, event)" class="dropdown-item">English</li>
+        <li data-lang="he" onclick="onSetLang(this, event)" class="dropdown-item">עברית</li>
+      </ul>
+    </div>
+    <button class="btn-dark create-btn" data-toggle="modal" data-target="#modalRegisterForm" data-trans="create"
+      type="button">create a new
+      book</button>
+
+  </div>
+
+  <!-- <div class="sort-btns">
     <h4 id="sort-txt">sort by:</h4>
     <button name="name" class="sort-btn" onclick="onSetSort(this)" type="button">Book's Name</button>
     <button name="high to low" class="sort-btn" onclick="onSetSort(this)" type="button">Price:high to low</button>
@@ -39,8 +54,8 @@
 
 
     <button class="create-btn" onclick="onAddBook()" type="button">create a new book</button>
-  </div>
-
+  </div> -->
+  <!-- 
   <table class="books-table">
     <thead>
       <tr>
@@ -54,13 +69,19 @@
     <tbody></tbody>
   </table>
   <div class="container xlarge">
-    <div class="pagination">
-      <ul>
+    
+  </ul>
+</div>
+</div> -->
 
-      </ul>
-    </div>
+
+  <div class="container">
+
+
   </div>
 
+
+  <!-- 
   <div class="modal" hidden>
     <h3>Book deatiles:</h2>
       <hr>
@@ -76,9 +97,9 @@
 
 
       <button id="close" onclick="onCloseModal()">Close</button>
-  </div>
+  </div> -->
 
-  <div class="input-modal" hidden>
+  <!-- <div class="input-modal" hidden>
 
     <h3>Enter the book's deatiles</h3>
     <hr>
@@ -94,9 +115,108 @@
     <button id="close" onclick="onCloseInputModal()">Close</button>
 
   </div>
+-->
 
-  <script src="js/utils.service.js"></script>
+  <div class="pagination">
+  </div>
+
+
+  <form onsubmit="inputConfirm()" class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 data-trans="deatiles" class="modal-title w-100 font-weight-bold">Enter deatiles</h4>
+          <button type="button" class="btn-dark close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mx-3">
+          <div class="md-form mb-5">
+            <i class="fas fa-user prefix grey-text"></i>
+            <input data-trans="name" name="title-input" type="text" id="orangeForm-name" class="form-control validate">
+            <label data-trans="name">book name</label>
+          </div>
+          <div class="md-form mb-5">
+            <i class="fas fa-envelope prefix grey-text"></i>
+            <input data-trans="price" name="price-input" type="price" id="orangeForm-email"
+              class="form-control validate">
+            <label data-trans="price">price</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <i class="fas fa-lock prefix grey-text"></i>
+            <input data-trans="img" name="img-input" id="orangeForm-pass" class="form-control validate">
+            <label data-trans="url">image-url</label>
+          </div>
+
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button data-trans="confirm" type="submit" class="btn btn-dark">confirm</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade bottom" id="basicExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-full-height modal-right" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" date-trans="test" id="exampleModalLabel">Book review:
+          </h5>
+          <button type="button" class="btn primary close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="img-container">
+
+          </div>
+          <hr>
+          <h3 data-trans="id">
+            <h5></h5>
+          </h3>
+          <h3 data-trans="name">
+            <h4></h4>
+          </h3>
+          <h3 data-trans="price">
+            <h2>
+            </h2>
+          </h3>
+
+
+
+          <div class="rate-conroller">
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+    integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+    integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+    crossorigin="anonymous"></script>
+
   <script src="js/storage.service.js"></script>
+  <script src="js/i18n.service.js"></script>
+  <script src="js/utils.service.js"></script>
   <script src="js/books.service.js"></script>
   <script src="js/controller.js"></script>
 </body>

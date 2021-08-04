@@ -2,18 +2,36 @@
 
 var gActiveBtn;
 var gSortActive;
+$('.dropdown').click(function () {
+
+  $('.dropdown-menu').toggleClass('show');
+
+});
 
 function onInit() {
   console.log('hii');
   renderBooks()
-  renderButtons()
-  gSortActive = document.querySelector('[name="name"]')
-  gSortActive.classList.add('active-sort')
-  gActiveBtn = document.querySelector(`[name="btn${gPageIdx + 1}"]`)
-  gActiveBtn.classList.add('active')
+  renderPageNav()
+  doTrans()
+
 }
 
 
+function onSetLang(lang) {
+
+  console.log(lang);
+  var lan = $(lang).attr("data-lang");
+  setCurrLang(lan);
+  console.log(lan);
+  // if (lang === 'he') {
+  // document.querySelector('body').classList.add('rtl')
+  // } else {
+  //     document.querySelector('body').classList.remove('rtl')
+  //     document.querySelector('.modal-header').classList.remove('rtl-modal')
+  //     document.querySelector('.modal-header .close').classList.remove('rtl-modal-button')
+  // }
+
+}
 
 
 function renderBooks() {
@@ -21,23 +39,53 @@ function renderBooks() {
 
   var books = getBooks()
 
+  var strHead = `
+   <div class="row bg-dark mb-2">
+  <div data-trans="rate"  class="col">
+    rate
+  </div>
+  <div data-trans="name" class="col">
+    name
+  </div>
+  <div data-trans="price" class="col">
+    price
+  </div>
+  <div data-trans="actions" class="col">
+    actions
+  </div>
+  <div date-trans="test" class="col">
+    book view:
+  </div>
+</div>`
+
   var strHTMLs = books.map(function (book) {
     var strHTML =
-      `<tr>
-            <td>${createStarsRate(book.rate)}</td> 
-            <td>${book.name}</td>
-            <td>${book.price}</td>
-            <td colspan=3>
-            <button class="read-btn" onclick="onReadBook('${book.id}')" type="boutton">Read</button>
-            <button class="update-btn" onclick="onUpdateBook('${book.id}')" type="boutton">Update</button>
-            <button class="delete-btn" onclick="onDeleteBook('${book.id}')" type="boutton">Delete</button>
-            </td>
-            <td>${book.img}</td>
-            </tr>`
+      `
+      <div class="row  mt-1 align-items-center">
+      <div class="col">
+        ${createStarsRate(book.rate)}
+      </div>
+      <div class="col">
+        ${book.name}
+      </div>
+      <div class="col">
+        ${book.price}
+      </div>
+      <div class="col">
+      <button data-trans="read" class="btn-primary read-btn" onclick="onReadBook('${book.id}')" type="">Read</button>
+      <button data-trans="update" class="btn-warning update-btn" onclick="onUpdateBook('${book.id}')" type="">Update</button>
+      <button data-trans="delete" class="btn-info delete-btn" onclick="onDeleteBook('${book.id}')" type="">Delete</button>
+      </div>
+      <div id="grid-image" class="col ">
+      ${book.img}
+      </div>
+      </div>
+      `
     return strHTML
   })
-  var elTable = document.querySelector('.books-table tbody');
-  elTable.innerHTML = strHTMLs.join('');
+  var elTable = document.querySelector('.container');
+  elTable.innerHTML = strHead + strHTMLs.join('');
+  doTrans()
 }
 
 function onSetSort(sortBy) {
@@ -46,113 +94,101 @@ function onSetSort(sortBy) {
   gSortActive.classList.add('active-sort')
   setSortBy(sortBy)
   renderBooks()
+  doTrans()
 }
 
-function renderButtons() {
-  var elButtons = document.querySelector('.pagination ul')
-  console.log(elButtons);
-  var numOfBtns = Math.ceil(gBooks.length / PAGE_SIZE)
-  console.log(numOfBtns);
-  elButtons.innerHTML = `
-<li><a name="prev" onclick="onPage(this)"></a></li>
-`
-  var strHtml = ''
-  for (let i = 0; i < numOfBtns; i++) {
-    strHtml += `<li><a name="btn${i + 1}" onClick="onPage(this)"></a></li>`
-  }
-  strHtml = strHtml + `<li><a name="next" onclick="onPage(this, event)"></a></li> `
-  elButtons.innerHTML += strHtml
-}
 
 
 function onAddBook() {
-  var elModal = document.querySelector('.input-modal')
-  elModal.hidden = false;
+  $('#modal-fade').on('shown.bs.modal', function () {
+    $('#exampleModal').trigger('focus')
+  })
+
 }
 
 function inputConfirm() {
+  debugger
   var name = document.querySelector('[name="title-input"]').value
   var price = document.querySelector('[name="price-input"]').value
   var img = document.querySelector('[name="img-input"]').value
   addBook(name, price, img)
   renderBooks()
-  renderButtons()
-  onCloseInputModal()
+  doTrans()
+  renderPageNav()
 }
 
 function onDeleteBook(bookIdx) {
   console.log('deleted id ', bookIdx);
   deleteBook(bookIdx)
   renderBooks()
-  renderButtons()
+  renderPageNav()
+
 }
 
 function onUpdateBook(bookIdx) {
-  var name = prompt('enter the book name')
-  var price = +prompt('enter the book price: ')
-  var img = prompt('enter the book url: ')
+  var name = document.querySelector('[name="title-input"]').value
+  var price = document.querySelector('[name="price-input"]').value
+  var img = document.querySelector('[name="img-input"]').value
   updateBook(bookIdx, name, price, img);
   renderBooks();
+  renderPageNav()
+
 }
 
 function onReadBook(bookIdx) {
   var book = getBookById(bookIdx)
-  var elModal = document.querySelector('.modal')
-  elModal.querySelector('.img-container').innerHTML = book.img
-  elModal.querySelector('h5').innerText = 'book id:' + book.id
-  elModal.querySelector('h4').innerText = 'book title: ' + book.name
-  elModal.querySelector('p').innerText = 'book price: ' + book.price
-  elModal.hidden = false;
-  elModal.querySelector('.rate-conroller').innerHTML =
+  $('#basicExampleModal').modal('show')
+  $('.img-container').html(book.img)
+  $('.modal-body h5').html(book.id)
+  $('.modal-body h4').html(book.name)
+  $('.modal-body h2').html(book.price)
+
+  $('.rate-conroller').html(
     `
-    <h4>rate this book:</h4>
+  <h4 data-trans="ratethis">rate this book:</h4>
 
-  <button onclick="addRate('${bookIdx}')">+</button>
-  <span>${book.rate}</span>
-  <button onclick="decRate('${bookIdx}')">-</button>`
-
+<button class="btn-dark" onclick="addRate('${bookIdx}')">+</button>
+<span>${book.rate}</span>
+<button class="btn-dark " onclick="decRate('${bookIdx}')">-</button>`
+  )
+  doTrans()
 }
 
-function onCloseModal() {
-  document.querySelector('.modal').hidden = true
-}
-
-function onCloseInputModal() {
-  document.querySelector('.input-modal').hidden = true
-}
 
 
 function onPage(elDirection) {
-  gActiveBtn.classList.remove('active')
 
 
-
-  console.log(elDirection);
-  if (elDirection.name === 'next') {
+  if (elDirection === 'next') {
 
     nextPage();
     renderBooks();
-    gActiveBtn = document.querySelector(`[name="btn${gPageIdx + 1}"]`)
-    gActiveBtn.classList.add('active')
     return
   }
-  if (elDirection.name === 'prev') {
+  if (elDirection === 'prev') {
     prevPage()
     renderBooks()
-    gActiveBtn = document.querySelector(`[name="btn${gPageIdx + 1}"]`)
-    gActiveBtn.classList.add('active')
     return
   }
 
-  var pageNum = +elDirection.name.substring(3, 4)
-  console.log(typeof pageNum);
-  gPageIdx = pageNum - 1;
-
-  gActiveBtn = document.querySelector(`[name="btn${gPageIdx + 1}"]`)
-  gActiveBtn.classList.add('active')
-
-  renderBooks()
+}
 
 
+function renderPageNav() {
+  var str = ''
+  for (var i = 1; i <= getPagesLength(); i++) {
+    str += `<li class="page-item"><a class="page-link ${i}" href="#">${i}</a></li>
+`}
+  var strHtml = `
+  <nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item"><a class="page-link" data-trans="prev" onclick="onPage('prev')">Previous</a></li>
+  `
+  var str2 = `   <li class="page-item"><a class="page-link" data-trans="next" onclick="onPage('next')" >Next</a></li>
+  </ul>
+</nav>`
 
+  var strHtmls = strHtml + str + str2
+
+  $('.pagination').html(strHtmls)
 }

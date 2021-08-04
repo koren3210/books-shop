@@ -11,7 +11,9 @@ _createBooks();
 
 
 
-
+function getPagesLength() {
+  return Math.ceil(gBooks.length / PAGE_SIZE)
+}
 function getBooks() {
   gBooks.sort(sortBy)
   var startIdx = gPageIdx * PAGE_SIZE;
@@ -95,6 +97,7 @@ function deleteBook(bookId) {
   gBooks.splice(bookIdx, 1)
   _saveBooksToStorage();
 
+
 }
 
 function updateBook(bookIdx, newName, newPrice, newImg) {
@@ -111,10 +114,9 @@ function updateBook(bookIdx, newName, newPrice, newImg) {
 function addBook(name, price, imgUrl) {
   var book = _createBook(name, price, imgUrl)
   gBooks.unshift(book)
+
   _saveBooksToStorage();
-
 }
-
 
 
 function _saveBooksToStorage() {
