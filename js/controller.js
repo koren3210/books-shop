@@ -12,6 +12,12 @@ function onInit() {
   console.log('hii');
   renderBooks()
   renderPageNav()
+
+
+  gActiveBtn = document.querySelector(`[name="btn${gPageIdx + 1}"]`)
+  gActiveBtn.classList.add('active')
+
+
   doTrans()
 
 }
@@ -41,19 +47,19 @@ function renderBooks() {
 
   var strHead = `
    <div class="row bg-dark mb-2">
-  <div data-trans="rate"  class="col">
+  <div data-trans="rate" onclick="onSetSort(this)"  class="col hover-sort">
     rate
   </div>
-  <div data-trans="name" class="col">
+  <div  data-trans="name" onclick="onSetSort(this)" class="col hover-sort">
     name
   </div>
-  <div data-trans="price" class="col">
+  <div data-trans="price"  onclick="onSetSort(this)" class="col hover-sort">
     price
   </div>
   <div data-trans="actions" class="col">
     actions
   </div>
-  <div date-trans="test" class="col">
+  <div date-trans="test"  class="col">
     book view:
   </div>
 </div>`
@@ -69,7 +75,7 @@ function renderBooks() {
         ${book.name}
       </div>
       <div class="col">
-        ${book.price}
+        ${formatCurrency(book.price)}
       </div>
       <div class="col">
       <button data-trans="read" class="btn-primary read-btn" onclick="onReadBook('${book.id}')" type="">Read</button>
@@ -89,10 +95,10 @@ function renderBooks() {
 }
 
 function onSetSort(sortBy) {
-  gSortActive.classList.remove('active-sort')
-  gSortActive = sortBy;
-  gSortActive.classList.add('active-sort')
-  setSortBy(sortBy)
+  var sort = $(sortBy).attr("data-trans");
+  gSortActive = sort;
+
+  setSortBy(sort)
   renderBooks()
   doTrans()
 }
@@ -107,7 +113,6 @@ function onAddBook() {
 }
 
 function inputConfirm() {
-  debugger
   var name = document.querySelector('[name="title-input"]').value
   var price = document.querySelector('[name="price-input"]').value
   var img = document.querySelector('[name="img-input"]').value
@@ -163,13 +168,26 @@ function onPage(elDirection) {
 
     nextPage();
     renderBooks();
+    gActiveBtn = document.querySelector(`[name="btn${gPageIdx + 1}"]`)
+    gActiveBtn.classList.add('active')
     return
   }
   if (elDirection === 'prev') {
     prevPage()
     renderBooks()
+    gActiveBtn = document.querySelector(`[name="btn${gPageIdx + 1}"]`)
+    gActiveBtn.classList.add('active')
     return
   }
+
+  var pageNum = elDirection.substring(3, 4)
+  console.log(typeof pageNum);
+  gPageIdx = pageNum - 1;
+
+  gActiveBtn = document.querySelector(`[name="btn${gPageIdx + 1}"]`)
+  gActiveBtn.classList.add('active')
+
+  renderBooks()
 
 }
 
@@ -177,7 +195,7 @@ function onPage(elDirection) {
 function renderPageNav() {
   var str = ''
   for (var i = 1; i <= getPagesLength(); i++) {
-    str += `<li class="page-item"><a class="page-link ${i}" href="#">${i}</a></li>
+    str += `<li class="page-item"><a class="page-link" name="btn${i}" href="#">${i}</a></li>
 `}
   var strHtml = `
   <nav aria-label="Page navigation example">

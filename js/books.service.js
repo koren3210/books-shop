@@ -43,7 +43,7 @@ function _createBook(bookName, price, imgUrl) {
   return {
     id: makeId(),
     img: `<img class ="display-img" src="${imgUrl}" alt="${bookName}"></img>`,
-    price: `${price}$`,
+    price: price,
     name: bookName,
     rate: 1
   }
@@ -56,17 +56,15 @@ function sortBy(t1, t2) {
       return t1.name.localeCompare(t2.name);
     case 'rate':
       return parseInt(t2.rate) - parseInt(t1.rate);
-    case 'low to high':
+    case 'price':
       return parseInt(t1.price) - parseInt(t2.price);
-    case 'high to low':
-      return parseInt(t2.price) - parseInt(t1.price);
     default: return t1.name.localeCompare(t2.name);
 
   }
 }
 
 function setSortBy(sortBy) {
-  gSortBy = sortBy.name;
+  gSortBy = sortBy;
 }
 
 

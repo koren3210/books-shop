@@ -118,7 +118,9 @@ h4 {
   height: auto;
   object-fit: cover;
 }
-
+.active {
+  background-color: #999999;
+}
 #grid-image img {
   width: 100px;
   height: auto;
@@ -234,4 +236,11 @@ footer h4 {
     45px 45px 0px rgba(0, 0, 0, 0.1), 46px 46px 0px rgba(0, 0, 0, 0.08),
     47px 47px 0px rgba(0, 0, 0, 0.06), 48px 48px 0px rgba(0, 0, 0, 0.04),
     50px 50px 0px transparent;
+}
+
+.hover-sort:hover {
+  color: rgb(231, 207, 101);
+  cursor: -webkit-;
+}
+.hover-sort {
 }
